@@ -11,12 +11,15 @@ class City(BaseModel):
         verbose_name = "city organization"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
+
 
 class CourseOrg(BaseModel):
     name = models.CharField(verbose_name="org name", max_length=50)
     desc = models.TextField(verbose_name="org description")
     tag = models.CharField(verbose_name="org tag", default="World", max_length=10)
-    category = models.CharField(verbose_name="org category",
+    category = models.CharField(verbose_name="org category", max_length=4,
                                 choices=(("tafe", "tafe"), ("uni", "university"), ("indi", "individual")))
     click_nums = models.IntegerField(verbose_name="number of clicks", default=0)
     fav_nums = models.IntegerField(verbose_name="number of favorites", default=0)
@@ -29,6 +32,9 @@ class CourseOrg(BaseModel):
     class Meta:
         verbose_name = "course organization"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class Teacher(BaseModel):
@@ -46,3 +52,6 @@ class Teacher(BaseModel):
     class Meta:
         verbose_name = "course lecturer"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name

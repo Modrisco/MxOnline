@@ -15,7 +15,7 @@ class UserProfile(AbstractUser):
     birthday = models.DateField(verbose_name="birthday", blank=True, null=True)
     gender = models.CharField(max_length=6, verbose_name="gender", choices=GENDER_CHOICES)
     address = models.CharField(max_length=100, verbose_name="address", default="")
-    mobile = models.CharField(max_length=11, unique=True, verbose_name="mobile number")
+    mobile = models.CharField(max_length=11, verbose_name="mobile number")
     avatar = models.ImageField(upload_to="avatar/%Y/%m", verbose_name="avatar", default="default.jpg")
 
     class Meta:
