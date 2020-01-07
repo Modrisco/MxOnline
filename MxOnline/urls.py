@@ -15,14 +15,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
 from django.views.generic import TemplateView
+from django.views.decorators.csrf import csrf_exempt
+from django.views.static import serve
 
 
-from apps.users.views import LoginView, LogoutView
+from apps.organizations.views import OrgView
+from apps.users.views import LoginView, LogoutView, SendSmsView, DynamicLoginView, RegisterView
+from MxOnline.settings import MEDIA_ROOT
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('admin/', admin.site.urls),
+    path('d_login/', DynamicLoginView.as_view(), name="d_login"),
     path('login/', LoginView.as_view(), name="login"),
     path('logout/', LogoutView.as_view(), name="logout"),
+    path('register/', RegisterView.as_view(), name="register"),
+    url(r'^captcha/', include('captcha.urls')),
+    url(r'^media/(?P<path>.*$)', serve, {"document_root": MEDIA_ROOT}),
+    url(r'^send_sms/', csrf_exempt(SendSmsView.as_view()), name="send_sms"),
+
+    # organization
+    url(r'^org-list/', OrgView.as_view(), name="org-list"),
 ]
+
+
+# how to write a view
+'''
+1. code a view component
+2. set url
+3. change relative html code
+'''

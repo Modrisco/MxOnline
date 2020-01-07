@@ -551,7 +551,7 @@ $(function() {
                 "height":"auto",
                 "overflow":"visible"
             }).addClass("opened");
-            $('.listoptions').find('.more').html('收起')
+            $('.listoptions').find('.more').html('Cascade')
         }else{
 
             $('.listoptions .cont').css({
@@ -559,7 +559,7 @@ $(function() {
                 "overflow":"hidden"
             }).removeClass("opened");
 
-            $('.listoptions').find('.more').html('更多')
+            $('.listoptions').find('.more').html('More')
         }
     });
 
