@@ -21,13 +21,13 @@
                         <li>
                             <h2>Organization Category</h2>
                             <div class="cont">
-                                <a href="?city="><span class="active2">All</span></a>
+                                <a href="?city={{ city_id }}"><span class="{% ifequal category '' %} active2 {% endifequal %}">All</span></a>
 
-                                <a href="?ct=pxjg&city="><span class="">Training Org</span></a>
+                                <a href="?ct=tafe&city={{ city_id }}"><span class="{% ifequal category 'tafe' %} active2 {% endifequal %}">Training Org</span></a>
 
-                                <a href="?ct=gx&city="><span class="">Uni</span></a>
+                                <a href="?ct=uni&city={{ city_id }}"><span class="{% ifequal category 'uni' %} active2 {% endifequal %}">Uni</span></a>
 
-                                <a href="?ct=gr&city="><span class="">Individual</span></a>
+                                <a href="?ct=indi&city={{ city_id }}"><span class="{% ifequal category 'indi' %} active2 {% endifequal %}">Individual</span></a>
 
                             </div>
                         </li>
@@ -35,9 +35,9 @@
                             <h2>Located Cities</h2>
                             <div class="more">More</div>
                             <div class="cont">
-                                <a href="?ct="><span class="active2">All Cities</span></a>
+                                <a href="?ct={{ category }}"><span class="{% ifequal city_id '' %} active2 {% endifequal %}">All Cities</span></a>
                                 {% for city in all_cities %}
-                                    <a href="?city=1&ct="><span class="">{{ city.name }}</span></a>
+                                    <a href="?ct={{ category }}&city={{ city.id }}"><span class="{% ifequal city_id city.id|stringformat:'i' %} active2 {% endifequal %}">{{ city.name }}</span></a>
                                 {% endfor %}
                             </div>
                         </li>
@@ -54,7 +54,7 @@
                             </ul>
                         </div>
 
-                        {% for org in all_orgs %}
+                        {% for org in all_orgs.object_list %}
                             <dl class="des difdes">
                                 <dt>
                                     <a href="org-detail-homepage.html">
@@ -75,7 +75,8 @@
                                         </a>
                                     </div>
                                     <ul class="cont">
-                                        <li class="first"><p class="pic9">Course Num: <span>{{ org.course_nums }}</span></p>
+                                        <li class="first"><p class="pic9">Course Num: <span>{{ org.course_nums }}</span>
+                                        </p>
                                             <p class="c7">Student Num: <span>{{ org.students }}</span></p></li>
                                         <li class="c8" style="padding-left:18px;">{{ org.address }}</li>
                                         <li class="pic10" style="padding-left:18px;">经典课程：
@@ -94,20 +95,24 @@
                     </div>
                     <div class="pageturn">
                         <ul class="pagelist">
+                            {% if all_orgs.has_previous %}
+                                <li class="long"><a href="?{{ all_orgs.previous_page_number.querystring }}">Previous</a></li>
+                            {% endif %}
 
-
-                            <li class="active"><a href="?page=1">1</a></li>
-
-
-                            <li><a href="?page=2" class="page">2</a></li>
-
-
-                            <li><a href="?page=3" class="page">3</a></li>
-
-
-                            <li class="long"><a href="?page=2">Next</a></li>
-
-
+                            {% for page in all_orgs.pages %}
+                                {% if page %}
+                                    {% ifequal page all_orgs.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% else %}
+                                    <li class="none">...</li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_orgs.has_next %}
+                                <li class="long"><a href="?{{ all_orgs.next_page_number.querystring }}">Next</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -125,7 +130,8 @@
                     </div>
                     <div>
                         <img src="{% static 'images/rightform3.png' %}"/>
-                        <input type="text" name="course_name" id="companyAddress" placeholder="Course Name" maxlength="50"/>
+                        <input type="text" name="course_name" id="companyAddress" placeholder="Course Name"
+                               maxlength="50"/>
                     </div>
                     <p class="error company-tips" id="jsCompanyTips"></p>
                     <input class="btn" type="text" id="jsStayBtn" value="Ask Now >"/>
